@@ -6,9 +6,9 @@ import pathlib as path
 # from os import remove
 from .app.novel_to_book import NovelChaptersLoader
 import telebot
+import os
 
-
-BOT_TOKEN = ""
+BOT_TOKEN = os.environ["BOT_TOKEN"]
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
@@ -29,7 +29,9 @@ class ApiView(APIView):
         novel = NovelChaptersLoader(novel_name, url, start_num, source)
         novel.execute()
 
-        with open(path.Path("api", "app", f"{novel_name}.pdf"), "rb") as file:  send_file(file)
+        # with open(path.Path("api", "app", f"{novel_name}.pdf"), "rb") as file:  send_file(file)
+        with open(path.Path("/tmp" f"{novel_name}.pdf"), "rb") as file:  send_file(file)
+        
         # remove(path.Path("api", "app", f"{novel_name}.pdf"))
 
         return Response({"send": True})

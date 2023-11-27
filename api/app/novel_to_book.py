@@ -9,7 +9,8 @@ from scrapy.selector import Selector
 # import shutil
 import os
 
-CURRENT_DIR = os.path.join(os.getcwd(), "api", "app")
+# CURRENT_DIR = os.path.join(os.getcwd(), "api", "app")
+CURRENT_DIR = "/tmp"
 
 class Website(Enum):
     Bednovel = 0,
