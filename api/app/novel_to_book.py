@@ -9,8 +9,7 @@ from scrapy.selector import Selector
 # import shutil
 import os
 
-# CURRENT_DIR = os.path.join(os.getcwd(), "api", "app")
-CURRENT_DIR = "/tmp"
+CURRENT_DIR = os.path.join(os.getcwd(), "api", "app")
 
 class Website(Enum):
     Bednovel = 0,
@@ -88,8 +87,7 @@ class NovelChaptersLoader():
         pdf.set_page_background((0, 0, 0))
         pdf.set_text_color(255, 255, 255)    
         pdf.add_page()
-        # pdf.add_font("OpenSans", "", os.path.join(CURRENT_DIR, 'OpenSans.ttf'))
-        pdf.add_font("OpenSans", "", os.path.join(os.getcwd(), "api", "app", 'OpenSans.ttf'))
+        pdf.add_font("OpenSans", "", os.path.join(CURRENT_DIR, 'OpenSans.ttf'))
         pdf.set_font("OpenSans", '', size=22)
 
         with open(os.path.join(CURRENT_DIR, f"{self.series_name}.txt"), 'r', encoding="utf-8") as f:

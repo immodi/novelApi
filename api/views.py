@@ -29,8 +29,7 @@ class ApiView(APIView):
         novel = NovelChaptersLoader(novel_name, url, start_num, source)
         novel.execute()
 
-        # with open(path.Path("api", "app", f"{novel_name}.pdf"), "rb") as file:  send_file(file)
-        with open(path.Path("/tmp" f"{novel_name}.pdf"), "rb") as file:  send_file(file)
+        with open(path.Path("api", "app", f"{novel_name}.pdf"), "rb") as file:  send_file(file)
         
         # remove(path.Path("api", "app", f"{novel_name}.pdf"))
 
