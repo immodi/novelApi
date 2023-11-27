@@ -1,7 +1,5 @@
 Django==4.2.7
 django-cors-headers==4.3.1
-django-import-export==3.3.3
-django-rest-framework==0.1.0
 djangorestframework==3.14.0
 fpdf2==2.7.6
 requests==2.31.0
