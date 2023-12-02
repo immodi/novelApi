@@ -6,7 +6,7 @@ from os import mkdir, remove
 from glob import glob
 
 
-def handle_uploaded_file(f, bot):
+def handle_uploaded_file(f, bot, chat_name):
     dir_name = Path("media", str(f).split(".")[0])
     file_path = Path(dir_name, str(f))
     main_file = File(mime_type="none", name=str(f), size="none")
@@ -23,7 +23,7 @@ def handle_uploaded_file(f, bot):
     split.bysize(25*1024*1024)
     remove(file_path)
     
-    handle_sending_chunks(bot, dir_name, main_file)
+    handle_sending_chunks(chat_name, bot, dir_name, main_file)
     
 
 def merge_file(f):
@@ -33,14 +33,19 @@ def merge_file(f):
     merge.merge(True)
 
 
-def handle_sending_chunks(bot, dir, main_parent, total_size=0, parent_mime_type=""):
+def handle_sending_chunks(chat_name, bot, dir, main_parent, total_size=0, parent_mime_type=""):
+    chat = {
+        "novel": -4087357016,
+        "drive": -4072410444
+    }
+
     files = glob(f"{dir}/*")
 
     for file_path in files:
         print(f"Currently processing {file_path}")
 
         with open(file_path, "rb") as file:
-            mes = bot.send_document(chat_id=-4087357016, document=file, timeout=9999)
+            mes = bot.send_document(chat_id=chat.get(chat_name), document=file, timeout=9999)
             if mes.json.get("document").get("mime_type"): 
                 mime_type = mes.json.get("document").get("mime_type")
                 parent_mime_type = mime_type

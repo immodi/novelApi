@@ -56,7 +56,7 @@ class NovelView(TemplateView):
             main_file = File(mime_type="none", name=f"{novel_name}.pdf", size="none")
             main_file.save()
 
-            handle_sending_chunks(bot, dir_name, main_file)
+            handle_sending_chunks("drive", bot, dir_name, main_file)
             rmtree(dir_name)        
                 
 
