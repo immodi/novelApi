@@ -1,0 +1,17 @@
+.main-container {
+    /* The color pallete = {F1EAFF, E5D4FF, DCBFFF, D0A2F7} */
+    background-color: #F1EAFF; 
+    height: 100dvh;
+}
+
+.bg-custom {
+    background-color: #E5D4FF !important;
+}
+
+.bg-custom-2 {
+    background-color: #DCBFFF !important;
+}
+
+.bg-custom-3 {
+    background-color: #D0A2F7 !important;
+}

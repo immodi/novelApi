@@ -6,10 +6,10 @@ import requests
 from fpdf import FPDF
 from scrapy.http import HtmlResponse
 from scrapy.selector import Selector
-# import shutil
+import shutil
 import os
 
-CURRENT_DIR = os.path.join(os.getcwd(), "api", "app")
+CURRENT_DIR = os.path.join(os.getcwd(), "novels", "app")
 
 class Website(Enum):
     Bednovel = 0,
@@ -97,8 +97,8 @@ class NovelChaptersLoader():
                     continue
                 pdf.multi_cell(w=0, h=16 ,txt=x, align='L', fill=True)
         pdf.output(os.path.join(CURRENT_DIR, f"{self.series_name}.pdf"))
-        # shutil.rmtree(os.path.join(CURRENT_DIR, self.series_name))
-        # os.remove(os.path.join(CURRENT_DIR, f"{self.series_name}.txt"))
+        shutil.rmtree(os.path.join(CURRENT_DIR, self.series_name))
+        os.remove(os.path.join(CURRENT_DIR, f"{self.series_name}.txt"))
         return
 
 

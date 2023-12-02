@@ -1,8 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
-import api.urls as api_urls
+from novels import urls as novels_urls
+from home import urls as home_urls
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(api_urls)),
+    path('', include(novels_urls)),
+    path('', include(home_urls)),
 ]

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/home/home.css" %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock css %}
+{% block content %}
+<div class="container mt-5">
+    <div class="container mb-3">
+        <div class="row">
+            <form id="form" enctype="multipart/form-data" method="post" action="/" class="col input-group mb-3">
+                {% csrf_token %}
+                <input type="file" name="file" class="form-control bg-custom" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                <button id="submitButton" class="btn bg-custom-2 btn-outline-secondary" type="submit" id="">
+                    <i class="fa-solid fa-upload"></i>
+                    Upload
+                </button>    
+            </form>
+
+            <div class="col input-group mb-3">
+                <input type="text" class="bg-custom form-control" placeholder="File Name..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn bg-custom-2 btn-outline-secondary" type="button" id="">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Search
+                </button>
+            </div>      
+        </div>    
+    </div>          
+    <table class="table table-secondary table-striped">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Date of Creation</th>
+                <th scope="col">Size</th>
+                <th class="t-r-last" scope="col">Download</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <th>{{forloop.counter}}</th>
+                <td>{{file.name}}</td>
+                <td>{{file.date}}</td>
+                <td>{{file.size}}</td>
+                <td class="t-r-last"><a href="/download?id={{file.id}}"><i class="fa-solid fa-download"></i></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+    const form = document.querySelector("#form")
+    const button = document.querySelector("#submitButton")
+    
+    button.addEventListener("click", () => {
+        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+        button.disabled = true;
+        form.submit()
+    })
+</script>
+{% endblock content %}
