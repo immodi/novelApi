@@ -20,7 +20,7 @@ BOT_TOKEN = environ.get("BOT_TOKEN")
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
-@method_decorator(csrf_exempt, name='novel')
+@method_decorator(csrf_exempt, name='dispatch')
 class NovelView(TemplateView):
     def get(self, request):
         template_name = Path("novels", "novels.html")

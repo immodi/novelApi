@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 BOT_TOKEN = environ.get("BOT_TOKEN")
 bot = telebot.TeleBot(BOT_TOKEN)
 
-@method_decorator(csrf_exempt, name='home')
+@method_decorator(csrf_exempt, name='dispatch')
 class HomeView(TemplateView):
     def get(self, request):
         # Delete all files in 'tmp' folder
