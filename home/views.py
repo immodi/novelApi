@@ -9,12 +9,16 @@ import telebot
 import requests
 from os import remove, environ
 from glob import glob
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 
 BOT_TOKEN = environ.get("BOT_TOKEN")
 bot = telebot.TeleBot(BOT_TOKEN)
 
+@method_decorator(csrf_exempt, name='home')
 class HomeView(TemplateView):
     def get(self, request):
         # Delete all files in 'tmp' folder
