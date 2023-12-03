@@ -66,7 +66,7 @@ class DownloadView(TemplateView):
         merge_file(file.name)
 
         try:    
-            response = FileResponse(open(Path("tmp", file.name), 'rb'))
+            response = FileResponse(open(Path("tmp", file.name), 'rb'), as_attachment=True, filename=file.name)
             response.headers['Content-Disposition'] = 'attachment; filename={}'.format(file.name)
             # response.headers['Content-Type'] = file.mime_type
             response.headers['Content-Type'] = "application/octet-stream"
