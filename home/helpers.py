@@ -4,12 +4,14 @@ from home.models import Chunk, File
 from pathlib import Path
 from os import mkdir, remove
 from glob import glob
-
+from re import sub
 
 def handle_uploaded_file(f, bot, chat_name):
-    dir_name = Path("media", str(f).split(".")[0])
-    file_path = Path(dir_name, str(f))
-    main_file = File(mime_type="none", name=str(f), size="none")
+    file_name = str(f)
+    sub(r'\W+', '', file_name)
+    dir_name = Path("media", file_name.split(".")[0])
+    file_path = Path(dir_name, file_name)
+    main_file = File(mime_type="none", name=file_name, size="none")
     main_file.save()
 
     try: mkdir(dir_name)

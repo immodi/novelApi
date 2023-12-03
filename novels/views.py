@@ -8,6 +8,7 @@ import telebot
 from filesplit.split import Split
 from os import remove
 from os import environ
+from re import sub
 from django.shortcuts import redirect
 from pathlib import Path
 from shutil import rmtree
@@ -46,6 +47,7 @@ class NovelView(TemplateView):
 
         if form.is_valid():
             novel_name = form.cleaned_data.get("novel_name")
+            sub(r'\W+', '', novel_name)
             novel_url = form.cleaned_data.get("novel_url")
             start_num = int(form.cleaned_data.get("starting_chapter"))
             source = sources.get(form.cleaned_data.get("novel_source"))

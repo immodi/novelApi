@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from pathlib import Path
 from home.models import File
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import FileResponse, HttpResponseNotFound
 from .helpers import *
 from .forms import UploadFileForm
 import telebot
@@ -67,9 +67,7 @@ class DownloadView(TemplateView):
 
         try:    
             with open(Path("tmp", file.name), 'rb') as f:
-                file_data = f.read()
-                response = HttpResponse(file_data, content_type=f'{file.mime_type}')
-                response['Content-Disposition'] = f'attachment; filename="{file.name}"'
+                response = FileResponse(f)
         except IOError:
             response = HttpResponseNotFound('<h1>File not exist</h1>')
 
