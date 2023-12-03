@@ -46,8 +46,7 @@ class NovelView(TemplateView):
         #     print("Field Error:", field.name,  field.errors)
 
         if form.is_valid():
-            novel_name = form.cleaned_data.get("novel_name")
-            sub(r'\W+', '', novel_name)
+            novel_name = sub(r'\W+', ' ', form.cleaned_data.get("novel_name"))
             novel_url = form.cleaned_data.get("novel_url")
             start_num = int(form.cleaned_data.get("starting_chapter"))
             source = sources.get(form.cleaned_data.get("novel_source"))
