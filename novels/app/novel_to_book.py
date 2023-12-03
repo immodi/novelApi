@@ -10,7 +10,6 @@ import shutil
 import os
 
 CURRENT_DIR = os.path.join(os.getcwd(), "novels", "app")
-
 class Website(Enum):
     Bednovel = 0,
     AllnovelUpdates = 1,
@@ -35,6 +34,8 @@ class NovelChaptersLoader():
 
         while True:
             try:
+                try: os.mkdir(os.path.join(CURRENT_DIR, self.series_name))
+                except OSError: pass
                 request = requests.get(self.link)          
                 response = HtmlResponse(url=self.link, body=request.text, encoding="utf-8")
             

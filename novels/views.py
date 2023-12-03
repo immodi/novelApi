@@ -53,7 +53,7 @@ class NovelView(TemplateView):
             novel = NovelChaptersLoader(novel_name, novel_url, start_num, source)
             novel.execute()
             
-            dir_name = split_file(novel_name, "zip", Path("novels", "app"))
+            dir_name = split_file(novel_name, "pdf", Path("novels", "app"))
             
             main_file = File(mime_type="none", name=f"{novel_name}.pdf", size="none")
             main_file.save()
