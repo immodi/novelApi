@@ -27,7 +27,13 @@ class NovelView(TemplateView):
         return render(request, template_name)
     
     def post(self, request):
-        template_name = Path("novels", "novels.html")
+        data = File.objects.all()
+        template_name = Path("home", "home.html")
+        
+        context = {
+            "files": data
+        } 
+
         sources = {
             "Bednovel" : 0,
             "All Novel Updates" : 1,
@@ -36,7 +42,7 @@ class NovelView(TemplateView):
 
         form = NovelsForm(request.POST)
         # for field in form:
-            # print("Field Error:", field.name,  field.errors)
+        #     print("Field Error:", field.name,  field.errors)
 
         if form.is_valid():
             novel_name = form.cleaned_data.get("novel_name")
@@ -59,11 +65,11 @@ class NovelView(TemplateView):
             main_file = File(mime_type="none", name=f"{novel_name}.pdf", size="none")
             main_file.save()
 
-            handle_sending_chunks("drive", bot, dir_name, main_file)
+            handle_sending_chunks("novel", bot, dir_name, main_file)
             rmtree(dir_name)        
                 
 
-        return redirect("/")
+        return render(request, template_name, context)
                     
     
 # def send_file(file):

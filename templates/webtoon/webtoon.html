@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Webtoon Scrapper{% endblock title %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/webtoon/webtoon.css" %}">
+{% endblock css %}
+{% block content %}
+<form id="form" action="/webtoons/" class="container custom-form mt-4" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <div class="mb-3">
+        <label htmlFor="name" class="form-label">Webtoon Name</label>
+        <input type="text" name="webtoon_name" class="form-control" id="name" required/>
+    </div>
+    <div class="mb-3">
+        <label htmlFor="url" class="form-label">URL</label>
+        <input type="text" name="webtoon_url" class="form-control" id="url" required />
+    </div>
+    <div class="mb-3">
+        <label htmlFor="start" class="form-label" min="1" max="9999" value="1" required>Starting Chapter</label>
+        <input type="number" name="starting_chapter" class="form-control" id="start" required />
+    </div>
+    <div class="mb-3">
+        <label htmlFor="start" class="form-label" min="1" max="9999" value="1" required>Total Chapters</label>
+        <input type="number" name="total_chapters" class="form-control" id="start" required />
+    </div>
+    <div class="mb-4">
+        <label class="form-label">Source</label>
+        <select name="webtoon_source" class="form-select">
+            <option>Hiperdex</option>
+            <option>Manga18fx</option>
+            <option>Toonily.net</option>
+        </select>
+    </div>
+   
+    <button id="submitButton" type="submit" class="btn btn-primary position-relative">
+        Request
+    </button> 
+</form>
+<script>
+    const form = document.querySelector("#form")
+    const button = document.querySelector("#submitButton")
+    
+    button.addEventListener("click", () => {
+        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+        button.disabled = true;
+        form.submit()
+    })
+</script>
+{% endblock content %}

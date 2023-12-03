@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views.generic import TemplateView
 from pathlib import Path
 from home.models import File
@@ -11,8 +11,6 @@ from os import remove, environ
 from glob import glob
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-
-
 
 
 BOT_TOKEN = environ.get("BOT_TOKEN")
