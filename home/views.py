@@ -68,8 +68,7 @@ class DownloadView(TemplateView):
         try:    
             response = FileResponse(open(Path("tmp", file.name), 'rb'), as_attachment=True, filename=file.name)
             response.headers['Content-Disposition'] = 'attachment; filename={}'.format(file.name)
-            # response.headers['Content-Type'] = file.mime_type
-            response.headers['Content-Type'] = "application/octet-stream"
+            response.headers['Content-Type'] = file.mime_type
         except IOError:
             response = HttpResponseNotFound('<h1>File not exist</h1>')
         return response
