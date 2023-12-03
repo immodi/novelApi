@@ -52,15 +52,7 @@ class NovelView(TemplateView):
             novel = NovelChaptersLoader(novel_name, novel_url, start_num, source)
             novel.execute()
             
-            dir_name = path.Path("novels", "app", novel_name)
-            file_path = path.Path("novels", "app", f"{novel_name}.pdf")
-
-            try: mkdir(dir_name)
-            except OSError: pass 
-             
-            split = Split(file_path, dir_name)
-            split.bysize(25*1024*1024)
-            remove(file_path)
+            dir_name = split_file(novel_name, "zip", Path("novels", "app"))
             
             main_file = File(mime_type="none", name=f"{novel_name}.pdf", size="none")
             main_file.save()

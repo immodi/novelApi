@@ -7,7 +7,7 @@ from .forms import WebtoonsForm
 from filesplit.split import Split
 from .app.main import WebtoonScrapper 
 from home.models import File
-from home.helpers import handle_sending_chunks
+from home.helpers import *
 import telebot
 from os import remove, environ, mkdir
 from shutil import rmtree
@@ -47,16 +47,8 @@ class WebtoonView(TemplateView):
             webtoon.execute()
             webtoon.clean_up()
 
-            dir_name = Path("webtoon", "app", f"{webtoon_name}_chunks")
-            file_path = Path("webtoon", "app", f"{webtoon_name}.zip")
+            dir_name = split_file(webtoon_name, "zip", Path("webtoon", "app"))
 
-            try: mkdir(dir_name)
-            except OSError: pass 
-             
-            split = Split(file_path, dir_name)
-            split.bysize(25*1024*1024)
-            remove(file_path)
-            
             main_file = File(mime_type="none", name=f"{webtoon_name}.zip", size="none")
             main_file.save()
 

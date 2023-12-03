@@ -26,6 +26,18 @@ def handle_uploaded_file(f, bot, chat_name):
     handle_sending_chunks(chat_name, bot, dir_name, main_file)
     
 
+def split_file(file_name, file_extention, dir_path):
+    dir_name = Path(dir_path, f"{file_name}_chunks")
+    file_path = Path(dir_path, f"{file_name}.{file_extention}")
+
+    try: mkdir(dir_name)
+    except OSError: pass 
+        
+    split = Split(file_path, dir_name)
+    split.bysize(20*1024*1024)
+    remove(file_path)
+    return dir_name
+
 def merge_file(f):
     # file_name = str(f).split(".")[0]
     input_dir = "tmp"
