@@ -66,7 +66,9 @@ class DownloadView(TemplateView):
         merge_file(file.name)
 
         try:    
-            response = FileResponse(open(Path("tmp", file.name), 'rb'), as_attachment=True)
+            response = FileResponse(open(Path("tmp", file.name), 'rb'))
+            response.headers['Content-Disposition'] = 'attachment; filename={}'.format(file.name)
+            response.headers['Content-Type'] = file.mime_type
         except IOError:
             response = HttpResponseNotFound('<h1>File not exist</h1>')
         return response
