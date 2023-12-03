@@ -20,7 +20,7 @@ def handle_uploaded_file(f, bot, chat_name):
             destination.write(chunk)
 
     split = Split(file_path, dir_name)
-    split.bysize(25*1024*1024)
+    split.bysize(20*1024*1024)
     remove(file_path)
     
     handle_sending_chunks(chat_name, bot, dir_name, main_file)
