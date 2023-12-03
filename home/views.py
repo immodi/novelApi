@@ -66,10 +66,9 @@ class DownloadView(TemplateView):
         merge_file(file.name)
 
         try:    
-            with open(Path("tmp", file.name), 'rb') as f:
-                response = FileResponse(f)
+            f = open(Path("tmp", file.name), 'rb')
+            response = FileResponse(f)
         except IOError:
             response = HttpResponseNotFound('<h1>File not exist</h1>')
-
         return response
     
