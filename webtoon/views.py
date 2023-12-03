@@ -39,7 +39,7 @@ class WebtoonView(TemplateView):
         } 
 
         if form.is_valid():
-            webtoon_name = sub(r'\W+', '', form.cleaned_data.get("webtoon_name"))
+            webtoon_name = sub(r'\W+', ' ', form.cleaned_data.get("webtoon_name"))
             webtoon_url = form.cleaned_data.get("webtoon_url")
             start_num = int(form.cleaned_data.get("starting_chapter"))
             total_chapters = int(form.cleaned_data.get("total_chapters"))

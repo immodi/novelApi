@@ -7,7 +7,7 @@ from glob import glob
 from re import sub
 
 def handle_uploaded_file(f, bot, chat_name):
-    file_name = sub(r'\W+', '', str(f))
+    file_name = sub(r'\W+', ' ', str(f))
     dir_name = Path("media", file_name.split(".")[0])
     file_path = Path(dir_name, file_name)
     main_file = File(mime_type="none", name=file_name, size="none")
