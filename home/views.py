@@ -67,7 +67,7 @@ class DownloadView(TemplateView):
 
         try:    
             f = open(Path("tmp", file.name), 'rb')
-            response = FileResponse(f)
+            response = FileResponse(f, as_attachment=True, filename=file.name)
         except IOError:
             response = HttpResponseNotFound('<h1>File not exist</h1>')
         return response
