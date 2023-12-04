@@ -14,7 +14,8 @@ from shutil import rmtree
 from glob import glob
 from re import sub
 
-BOT_TOKEN = environ.get("BOT_TOKEN")
+# BOT_TOKEN = environ.get("BOT_TOKEN")
+BOT_TOKEN = "6552202144:AAFVE2A3oVwJqiOouGffrAbRTeCJo8WjsGg"
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
@@ -44,9 +45,9 @@ class WebtoonView(TemplateView):
             start_num = int(form.cleaned_data.get("starting_chapter"))
             total_chapters = int(form.cleaned_data.get("total_chapters"))
             source = sources.get(form.cleaned_data.get("webtoon_source"))
-            webtoon = WebtoonScrapper(webtoon_name, webtoon_url, start_num, total_chapters, source)
-            webtoon.execute()
-            webtoon.clean_up()
+            # webtoon = WebtoonScrapper(webtoon_name, webtoon_url, start_num, total_chapters, source)
+            # webtoon.execute()
+            # webtoon.clean_up()
 
             dir_name = split_file(webtoon_name, "zip", Path("webtoon", "app"))
 

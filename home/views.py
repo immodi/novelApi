@@ -2,18 +2,20 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from pathlib import Path
 from home.models import File
-from django.http import FileResponse, HttpResponseNotFound
+from django.http import StreamingHttpResponse, HttpResponseNotFound
+from wsgiref.util import FileWrapper
 from .helpers import *
 from .forms import UploadFileForm
 import telebot
 import requests
-from os import remove, environ
+from os import remove, environ, path
 from glob import glob
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 
-BOT_TOKEN = environ.get("BOT_TOKEN")
+# BOT_TOKEN = environ.get("BOT_TOKEN")
+BOT_TOKEN = "6552202144:AAFVE2A3oVwJqiOouGffrAbRTeCJo8WjsGg"
 bot = telebot.TeleBot(BOT_TOKEN)
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -65,9 +67,16 @@ class DownloadView(TemplateView):
             
         merge_file(file.name)
 
-        try:    
-            response = FileResponse(open(Path("tmp", file.name), 'rb'), as_attachment=True, filename=file.name)
-        except IOError:
-            response = HttpResponseNotFound('<h1>File not exist</h1>')
+        filename = Path("tmp", file.name)
+        chunk_size = 8192
+        # chunk_size = 1024
+        response = StreamingHttpResponse(
+            FileWrapper(
+                open(filename, "rb"),
+                chunk_size,
+            ),
+            content_type=file.mime_type,
+        )
+        response["Content-Length"] = path.getsize(filename)
+        response["Content-Disposition"] = f"attachment; filename={filename}"
         return response
-    

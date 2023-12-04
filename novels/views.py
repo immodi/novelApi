@@ -17,7 +17,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 
-BOT_TOKEN = environ.get("BOT_TOKEN")
+# BOT_TOKEN = environ.get("BOT_TOKEN")
+BOT_TOKEN = "6552202144:AAFVE2A3oVwJqiOouGffrAbRTeCJo8WjsGg"
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
@@ -64,12 +65,3 @@ class NovelView(TemplateView):
 
         return render(request, template_name, context)
                     
-    
-# def send_file(file):
-#     mes = bot.send_document(chat_id=-4087357016, document=file)
-#     # file_id = mes.json.get("document").get("file_id")
-#     name = mes.json.get("document").get("file_name")
-#     mime_type = mes.json.get("document").get("mime_type")
-#     size = "{:,.2f}mb".format(float(mes.json.get("document").get("file_size"))/1024/1024)
-#     # file = File(file_id=file_id, name=name, mime_type=mime_type, size=size)
-#     # file.save()
