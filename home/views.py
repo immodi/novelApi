@@ -2,10 +2,10 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from pathlib import Path
 from home.models import File
-from django.http import StreamingHttpResponse, HttpResponseNotFound, FileResponse
+from django.http import StreamingHttpResponse, HttpResponseNotFound, FileResponse, JsonResponse
 from wsgiref.util import FileWrapper
 from .helpers import *
-from .forms import UploadFileForm
+from .forms import UploadFileForm, DownloadFileForm
 import telebot
 import requests
 from os import remove, environ, path
@@ -57,17 +57,6 @@ class DownloadView(TemplateView):
     def get(self, request):
         file_id = request.GET.get("file_id")
         file = File.objects.get(pk=int(file_id))
-        all_chunks = file.chunk_set.all()
-
-        for chunk in all_chunks:
-            file_location = Path("tmp", chunk.name)
-            r = requests.get(bot.get_file_url(chunk.file_id), allow_redirects=True)
-
-            with open(file_location, 'wb+') as new_file:
-                new_file.write(r.content)
-            
-        merge_file(file.name)
-
         file_path = Path("tmp", file.name)
         chunk_size = 1024*1
         response = StreamingHttpResponse(
@@ -76,6 +65,23 @@ class DownloadView(TemplateView):
         )
         response["Content-Disposition"] = f"attachment; filename={file.name}"
         response["Content-Length"] =  path.getsize(file_path)
+        return response
 
-        return response    
+    def post(self, request):
+        form = DownloadFileForm(request.POST)
+        if form.is_valid():
+            file_id = form.cleaned_data.get("file_id")
+            file = File.objects.get(pk=int(file_id))
+            all_chunks = file.chunk_set.all()
+
+            for chunk in all_chunks:
+                file_location = Path("tmp", chunk.name)
+                r = requests.get(bot.get_file_url(chunk.file_id), allow_redirects=True)
+
+                with open(file_location, 'wb+') as new_file:
+                    new_file.write(r.content)
+                
+            merge_file(file.name)
+            return JsonResponse({'done': True})
+        else: return JsonResponse({'done': False})
 
