@@ -43,7 +43,7 @@
                 <td>{{file.size}}</td>
                 <td class="t-r-last">
                     <form id="downloadForm" action="/download" method="post">
-                        {% csrf_token %}
+                        {% comment %} {% csrf_token %} {% endcomment %}
                         <input type="number" name="file_id" value="{{file.id}}" class="d-none" />
                         <button type="submit" id="downloadSubmit" class="{{file.id}}">
                             <i class="fa-solid fa-download"></i>
