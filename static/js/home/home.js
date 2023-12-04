@@ -36,7 +36,7 @@ async function requestFile(fileId, fileName) {
 
 function download(fileId, fileName) {
     let a = document.createElement('a'); 
-    // a.classList.add("d-none")
+    a.classList.add("d-none")
     a.href = `/download?file_id=${fileId}`; 
     a.download = fileName; 
     document.body.appendChild(a); 
