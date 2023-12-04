@@ -68,14 +68,10 @@ class DownloadView(TemplateView):
         merge_file(file.name)
 
         filename = Path("tmp", file.name)
-        chunk_size = 8192
-        # chunk_size = 1024
+        chunk_size = 1024*8
         response = StreamingHttpResponse(
-            FileWrapper(
-                open(filename, "rb"),
-                chunk_size,
-            ),
-            content_type=file.mime_type,
+            (chunk for chunk in FileWrapper(open(filename, 'rb'), chunk_size)),
+            content_type=file.mime_type
         )
         response["Content-Length"] = path.getsize(filename)
         response["Content-Disposition"] = f"attachment; filename={filename}"
