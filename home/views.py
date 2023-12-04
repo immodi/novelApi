@@ -52,7 +52,7 @@ class HomeView(TemplateView):
         
         return render(request, template_name, context=context)
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class DownloadView(TemplateView):
     def get(self, request):
             template_name = Path("home", "home.html")
