@@ -1,5 +1,7 @@
 from django import forms
 
 class UploadFileForm(forms.Form):
-    # title = forms.CharField(max_length=9999)
     file = forms.FileField()
+
+class DownloadForm(forms.Form):
+    file_id = forms.IntegerField(required=True)
