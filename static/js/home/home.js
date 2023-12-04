@@ -27,7 +27,7 @@ async function requestFile(fileId, fileName) {
         url: '/download',
         data: formData
     }).then((response) => {
-        // console.log()
+        // console.log(response.data)
         if (response.data["done"]) {
             download(fileId, fileName)
         }
@@ -36,8 +36,6 @@ async function requestFile(fileId, fileName) {
 
 function download(fileId, fileName) {
     let a = document.createElement('a'); 
-    // let link = document.createTextNode("");
-    // a.appendChild(link); 
     a.classList.add("d-none")
     a.href = `/download?file_id=${fileId}`; 
     a.download = fileName; 

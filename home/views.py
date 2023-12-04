@@ -8,7 +8,7 @@ from .helpers import *
 from .forms import UploadFileForm, DownloadFileForm
 import telebot
 import requests
-from os import remove, environ, path
+from os import remove, environ, path, getcwd
 from glob import glob
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -57,7 +57,7 @@ class DownloadView(TemplateView):
     def get(self, request):
         file_id = request.GET.get("file_id")
         file = File.objects.get(pk=int(file_id))
-        file_path = Path("tmp", file.name)
+        file_path = Path(getcwd(), "tmp", file.name)
         chunk_size = 1024*1
         response = StreamingHttpResponse(
             FileWrapper(open(file_path, 'rb'), chunk_size),
@@ -72,6 +72,7 @@ class DownloadView(TemplateView):
         if form.is_valid():
             file_id = form.cleaned_data.get("file_id")
             file = File.objects.get(pk=int(file_id))
+            file_path = Path(getcwd(), "tmp", file.name)
             all_chunks = file.chunk_set.all()
 
             for chunk in all_chunks:
@@ -82,6 +83,6 @@ class DownloadView(TemplateView):
                     new_file.write(r.content)
                 
             merge_file(file.name)
-            return JsonResponse({'done': True})
+            return JsonResponse({'done': True,  'fileUrl': str(file_path)})
         else: return JsonResponse({'done': False})
 

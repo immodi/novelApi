@@ -48,7 +48,9 @@
                             <i class="fa-solid fa-download"></i>
                         </button>
                     </form>
-                    {% comment %} <a href="/download?{{file.id}}"></a> {% endcomment %}
+                    {% comment %} <a href="/download?{{file.id}} download={{file.url}}">
+                        <i class="fa-solid fa-download"></i>
+                    </a> {% endcomment %}
                 </td>
             </tr>
             {% endfor %}
