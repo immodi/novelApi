@@ -2,7 +2,8 @@
 {% load static %}
 {% block title %}Webtoon Scrapper{% endblock title %}
 {% block css %}
-<link rel="stylesheet" href="{% static "css/webtoon/webtoon.css" %}">
+</style>
+{% comment %} <link rel="stylesheet" href="{% static "css/webtoon/webtoon.css" %}"> {% endcomment %}
 {% endblock css %}
 {% block content %}
 <form id="form" action="/webtoons/" class="container custom-form mt-4" method="post">

@@ -2,8 +2,12 @@
 {% load static %}
 {% block title %}Home{% endblock title %}
 {% block css %}
-<link rel="stylesheet" href="{% static "css/home/home.css" %}">
+{% comment %} <link rel="stylesheet" href="{% static "css/home/home.css" %}"> {% endcomment %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    .t-r-last {
+        text-align: end;
+    }
+</style>
 {% endblock css %}
 {% block content %}
 <div class="container mt-5">
@@ -50,5 +54,16 @@
         </tbody>
     </table>
 </div>
-<script src="{% static "js/home/home.js" %}"></script>
+<script>
+    const form = document.querySelector("#form")
+    const button = document.querySelector("#submitButton")
+
+
+    button.addEventListener("click", () => {
+        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+        button.disabled = true;
+        form.submit()
+    })
+
+</script>
 {% endblock content %}
