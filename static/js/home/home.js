@@ -1,6 +1,6 @@
 const form = document.querySelector("#form")
 const button = document.querySelector("#submitButton")
-const requestFile = document.querySelectorAll("#requestFile")
+// const requestFile = document.querySelectorAll("#requestFile")
 
 
 button.addEventListener("click", () => {
@@ -9,9 +9,13 @@ button.addEventListener("click", () => {
     form.submit()
 })
 
-requestFile.forEach(element => {
-    element.addEventListener('click', () => {
-        let fileId = parseInt(element.classList[2])
-        location.replace(`/download?file_id=${fileId}`)
-    })
-});
+// requestFile.forEach(element => {
+//     element.addEventListener('click', () => {
+//         let fileId = parseInt(element.classList[2])
+//         // let fileName = parseInt(element.classList[3])
+//         // let fileMimeType = parseInt(element.classList[4])
+//         location.replace(`/download?file_id=${fileId}`)
+//         // downloader(fileId, fileName, fileMimeType)
+//     })
+// });
+

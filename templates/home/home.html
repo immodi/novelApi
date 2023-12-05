@@ -41,16 +41,16 @@
                 <td>{{file.date}}</td>
                 <td>{{file.size}}</td>
                 <td class="t-r-last">
-                    {% comment %} <a href="/download?file_id={{file.id}}">
+                    <a href="/download?file_id={{file.id}}">
                         <i class="fa-solid fa-download"></i>
-                    </a> {% endcomment %}
-                    <i id="requestFile" class="fa-solid fa-download {{file.id}} {{file.name}}" style="cursor: pointer;"></i>
+                    </a>
+                    {% comment %} <i id="requestFile" class="fa-solid fa-download {{file.id}}" style="cursor: pointer;"></i> {% endcomment %}
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="{% static "js/home/home.js" %}"></script>
 {% endblock content %}
