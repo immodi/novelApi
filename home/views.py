@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from pathlib import Path
 from home.models import File
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
 from wsgiref.util import FileWrapper
 from .helpers import *
 from .forms import UploadFileForm, DownloadFileForm

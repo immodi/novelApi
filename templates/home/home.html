@@ -41,9 +41,10 @@
                 <td>{{file.date}}</td>
                 <td>{{file.size}}</td>
                 <td class="t-r-last">
-                    <a href="/download?file_id={{file.id}}" download="{{file.name}}">
+                    {% comment %} <a href="/download?file_id={{file.id}}">
                         <i class="fa-solid fa-download"></i>
-                    </a>
+                    </a> {% endcomment %}
+                    <i id="requestFile" class="fa-solid fa-download {{file.id}} {{file.name}}" style="cursor: pointer;"></i>
                 </td>
             </tr>
             {% endfor %}

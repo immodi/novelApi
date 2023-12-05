@@ -134,4 +134,4 @@ MEDIA_ROOT = Path(BASE_DIR, 'tmp')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CSRF_TRUSTED_ORIGINS = ['https://colab.research.google.com']
+CSRF_TRUSTED_ORIGINS = ['https://colab.research.google.com']
