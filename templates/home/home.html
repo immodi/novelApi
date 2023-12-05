@@ -41,7 +41,7 @@
                 <td>{{file.date}}</td>
                 <td>{{file.size}}</td>
                 <td class="t-r-last">
-                    <a href="/download/{{file.id}}">
+                    <a href="/download?file_id={{file.id}}">
                         <i class="fa-solid fa-download"></i>
                     </a>
                 </td>
@@ -50,6 +50,5 @@
         </tbody>
     </table>
 </div>
-{% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script> {% endcomment %}
 <script src="{% static "js/home/home.js" %}"></script>
 {% endblock content %}

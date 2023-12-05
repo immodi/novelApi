@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from pathlib import Path
 from home.models import File
-from django.http import HttpResponse
+from django.http import FileResponse
 from wsgiref.util import FileWrapper
 from .helpers import *
 from .forms import UploadFileForm, DownloadFileForm
@@ -55,7 +55,8 @@ class HomeView(TemplateView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DownloadView(TemplateView):
-    def get(self, request, file_id):
+    def get(self, request):
+        file_id = request.GET.get("file_id")
         file = File.objects.get(pk=int(file_id))
         all_chunks = file.chunk_set.all()
 
@@ -68,6 +69,5 @@ class DownloadView(TemplateView):
             
         merge_file(file.name)
         file_path = Path(getcwd(), "tmp", file.name)
-        response = HttpResponse(open(file_path, 'rb'), content_type=file.mime_type)
-        response['Content-Disposition'] = f"attachment; filename={file.name}"
+        response = FileResponse(open(file_path, 'rb'), as_attachment=True)
         return response
