@@ -2,12 +2,7 @@
 {% load static %}
 {% block title %}Novel Scrapper{% endblock title %}
 {% block css %}
-{% comment %} <link rel="stylesheet" href="{% static "css/novels/novels.css" %}"> {% endcomment %}
-    .custom-form {
-        position: relative;
-        top: 10dvh;
-    }
-</style>
+<link rel="stylesheet" href="{% static "css/novels/novels.css" %}">
 {% endblock css %}
 {% block content %}
 <form id="form" action="/novels/" class="container custom-form" method="post">
