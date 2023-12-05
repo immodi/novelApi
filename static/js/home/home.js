@@ -10,14 +10,14 @@ button.addEventListener("click", () => {
     form.submit()
 })
 
-downloadSubmit.forEach(element => {
-    element.addEventListener('click', (e) => {
-        e.preventDefault()
-        let fileId = parseInt(element.classList[0])
-        let fileName = document.querySelector(`#fileName${fileId}`).innerHTML
-        requestFile(fileId, fileName)
-    })
-});
+// downloadSubmit.forEach(element => {
+//     element.addEventListener('click', (e) => {
+//         e.preventDefault()
+//         let fileId = parseInt(element.classList[0])
+//         let fileName = document.querySelector(`#fileName${fileId}`).innerHTML
+//         requestFile(fileId, fileName)
+//     })
+// });
 
 async function requestFile(fileId, fileName) {
     var formData = new FormData();
@@ -27,18 +27,22 @@ async function requestFile(fileId, fileName) {
         url: '/download',
         data: formData
     }).then((response) => {
-        // console.log(response.data)
-        if (response.data["done"]) {
-            download(fileId, fileName)
-        }
+        console.log("REST");
+        let blob=new Blob([response.data]);
     })   
 }
 
-function download(fileId, fileName) {
-    let a = document.createElement('a'); 
-    a.classList.add("d-none")
-    a.href = `/download?file_id=${fileId}`; 
-    a.download = fileName; 
-    document.body.appendChild(a); 
-    a.click()
+function download(byte, ) {
+    // let a = document.createElement('a'); 
+    // a.classList.add("d-none")
+    // a.href = `/download?file_id=${fileId}`; 
+    // a.download = fileName; 
+    // document.body.appendChild(a); 
+    // a.click()
+    var blob = new Blob([byte], {type: "application/pdf"});
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    var fileName = reportName;
+    link.download = fileName;
+    link.click();
 }

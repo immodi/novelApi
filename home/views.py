@@ -55,22 +55,14 @@ class HomeView(TemplateView):
 @method_decorator(csrf_exempt, name='dispatch')
 class DownloadView(TemplateView):
     def get(self, request):
-        file_id = request.GET.get("file_id")
-        file = File.objects.get(pk=int(file_id))
-        file_path = Path(getcwd(), "tmp", file.name)
-        chunk_size = 1024*1
-        response = StreamingHttpResponse(
-            FileWrapper(open(file_path, 'rb'), chunk_size),
-            content_type=file.mime_type
-        )
-        response["Content-Disposition"] = f"attachment; filename={file.name}"
-        response["Content-Length"] =  path.getsize(file_path)
-        return response
+      pass
 
     def post(self, request):
         form = DownloadFileForm(request.POST)
+        print("Form IN")
         if form.is_valid():
             file_id = form.cleaned_data.get("file_id")
+            print(file_id)
             file = File.objects.get(pk=int(file_id))
             file_path = Path(getcwd(), "tmp", file.name)
             all_chunks = file.chunk_set.all()
@@ -83,6 +75,15 @@ class DownloadView(TemplateView):
                     new_file.write(r.content)
                 
             merge_file(file.name)
-            return JsonResponse({'done': True,  'fileUrl': str(file_path)})
+
+            chunk_size = 1024*1
+            response = StreamingHttpResponse(
+                FileWrapper(open(file_path, 'rb'), chunk_size),
+                content_type=file.mime_type
+            )
+            response["Content-Disposition"] = f"attachment; filename={file.name}"
+            response["Content-Length"] =  path.getsize(file_path)
+            response = FileResponse(open(file_path, 'rb'), as_attachment=True)
+            return response
         else: return JsonResponse({'done': False})
 
