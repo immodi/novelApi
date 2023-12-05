@@ -56,6 +56,7 @@ class HomeView(TemplateView):
 @method_decorator(csrf_exempt, name='dispatch')
 class DownloadView(TemplateView):
     def get(self, request, file_id):
+        file = File.objects.get(pk=int(file_id))
         all_chunks = file.chunk_set.all()
 
         for chunk in all_chunks:
@@ -66,7 +67,6 @@ class DownloadView(TemplateView):
                 new_file.write(r.content)
             
         merge_file(file.name)
-        file = File.objects.get(pk=int(file_id))
         file_path = Path(getcwd(), "tmp", file.name)
         response = HttpResponse(open(file_path, 'rb'), content_type=file.mime_type)
         response['Content-Disposition'] = f"attachment; filename={file.name}"
