@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from pathlib import Path
 from home.models import File
-from django.http import StreamingHttpResponse, HttpResponseNotFound, FileResponse, JsonResponse
+from django.http import HttpResponse
 from wsgiref.util import FileWrapper
 from .helpers import *
 from .forms import UploadFileForm, DownloadFileForm
@@ -12,6 +12,7 @@ from os import remove, environ, path, getcwd
 from glob import glob
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+
 
 
 # BOT_TOKEN = environ.get("BOT_TOKEN")
@@ -54,36 +55,19 @@ class HomeView(TemplateView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DownloadView(TemplateView):
-    def get(self, request):
-      pass
+    def get(self, request, file_id):
+        all_chunks = file.chunk_set.all()
 
-    def post(self, request):
-        form = DownloadFileForm(request.POST)
-        print("Form IN")
-        if form.is_valid():
-            file_id = form.cleaned_data.get("file_id")
-            print(file_id)
-            file = File.objects.get(pk=int(file_id))
-            file_path = Path(getcwd(), "tmp", file.name)
-            all_chunks = file.chunk_set.all()
+        for chunk in all_chunks:
+            file_location = Path("tmp", chunk.name)
+            r = requests.get(bot.get_file_url(chunk.file_id), allow_redirects=True)
 
-            for chunk in all_chunks:
-                file_location = Path("tmp", chunk.name)
-                r = requests.get(bot.get_file_url(chunk.file_id), allow_redirects=True)
-
-                with open(file_location, 'wb+') as new_file:
-                    new_file.write(r.content)
-                
-            merge_file(file.name)
-
-            chunk_size = 1024*1
-            response = StreamingHttpResponse(
-                FileWrapper(open(file_path, 'rb'), chunk_size),
-                content_type=file.mime_type
-            )
-            response["Content-Disposition"] = f"attachment; filename={file.name}"
-            response["Content-Length"] =  path.getsize(file_path)
-            response = FileResponse(open(file_path, 'rb'), as_attachment=True)
-            return response
-        else: return JsonResponse({'done': False})
-
+            with open(file_location, 'wb+') as new_file:
+                new_file.write(r.content)
+            
+        merge_file(file.name)
+        file = File.objects.get(pk=int(file_id))
+        file_path = Path(getcwd(), "tmp", file.name)
+        response = HttpResponse(open(file_path, 'rb'), content_type=file.mime_type)
+        response['Content-Disposition'] = f"attachment; filename={file.name}"
+        return response
