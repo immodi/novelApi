@@ -14,7 +14,8 @@ from shutil import rmtree
 from glob import glob
 from re import sub
 
-BOT_TOKEN = environ.get("BOT_TOKEN")
+# BOT_TOKEN = environ.get("BOT_TOKEN")
+BOT_TOKEN = "6552202144:AAFVE2A3oVwJqiOouGffrAbRTeCJo8WjsGg"
 bot = telebot.TeleBot(BOT_TOKEN)
 
 

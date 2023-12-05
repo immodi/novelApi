@@ -17,7 +17,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 
-BOT_TOKEN = environ.get("BOT_TOKEN")
+# BOT_TOKEN = environ.get("BOT_TOKEN")
+BOT_TOKEN = "6552202144:AAFVE2A3oVwJqiOouGffrAbRTeCJo8WjsGg"
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
