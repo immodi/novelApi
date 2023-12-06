@@ -54,14 +54,10 @@ const init = async () => {
 
 function startBar(fileSize, speedInMBps) {
     // 3MBps down&process speed in colab
-    setTimeout(() => {intervalFunction(fileSize, speedInMBps)}, parseInt(fileSize / 3));
-}
-
-function intervalFunction(fileSize, speedInMBps) {
     let originalSizeInMb = fileSize
 
     let interval = setInterval(() => {
-        let percentage = (100 - parseInt((fileSize / originalSizeInMb) * 100)) * 1.2
+        let percentage = (100 - parseInt((fileSize / originalSizeInMb) * 100)) * 2
         progressBar.ariaValueNow = `${percentage}`
         progressBar.style.width = `${percentage}%`
         progressBar.innerHTML = `${percentage}%`
@@ -70,4 +66,5 @@ function intervalFunction(fileSize, speedInMBps) {
             clearInterval(interval)
         }
     }, 1000);
+    // setTimeout(() => {intervalFunction(fileSize, speedInMBps)}, parseInt(fileSize / 3));
 }
