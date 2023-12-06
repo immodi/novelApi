@@ -14,7 +14,8 @@ fileButton.forEach(element => {
     element.addEventListener('click', (e) => {
         e.preventDefault()
         let fileId = parseInt(element.classList[0])
-        let fileName = element.classList[1]
+        let fileName = document.querySelector(`#fileName${fileId}`).innerHTML
+        console.log(fileName);
         let fileUrl = `/download?file_id=${fileId}`
         saveAs(fileUrl, fileName);
     })
