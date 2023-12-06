@@ -13,8 +13,6 @@ from glob import glob
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-
-
 BOT_TOKEN = environ.get("BOT_TOKEN")
 bot = telebot.TeleBot(BOT_TOKEN)
 
@@ -22,9 +20,9 @@ bot = telebot.TeleBot(BOT_TOKEN)
 class HomeView(TemplateView):
     def get(self, request):
         # Delete all files in 'tmp' folder
-        # files = glob('tmp/*')
-        # for f in files:
-        #     remove(f)
+        files = glob('tmp/*')
+        for f in files:
+            remove(f)
 
         data = File.objects.all()
         template_name = Path("home", "home.html")
