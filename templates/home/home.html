@@ -41,16 +41,24 @@
                 <td>{{file.date}}</td>
                 <td>{{file.size}}</td>
                 <td class="t-r-last">
-                    <a href="/download?file_id={{file.id}}">
+                    {% comment %} <a id="{}" href="/download?file_id={{file.id}}">
                         <i class="fa-solid fa-download"></i>
-                    </a>
-                    {% comment %} <i id="requestFile" class="fa-solid fa-download {{file.id}}" style="cursor: pointer;"></i> {% endcomment %}
+                    </a> {% endcomment %}
+                    <button type="submit" class="{{file.id}} {{file.name}}" style="all: unset; cursor: pointer;" id="fileButton">
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                    {% comment %} <form action="/download" method="post">
+                        <input type="number" name="file_id" class="d-none" value="{{file.id}}">
+                        <button type="submit" class="{{file.id}}" style="all: unset; cursor: pointer;" id="fileButton">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </form> {% endcomment %}
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{% static "js/FileSaver.js" %}"></script>
 <script src="{% static "js/home/home.js" %}"></script>
 {% endblock content %}
