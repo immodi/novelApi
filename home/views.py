@@ -19,10 +19,10 @@ bot = telebot.TeleBot(BOT_TOKEN)
 @method_decorator(csrf_exempt, name='dispatch')
 class HomeView(TemplateView):
     def get(self, request):
-        # # Delete all files in 'tmp' folder
-        # files = glob('tmp/*')
-        # for f in files:
-        #     remove(f)
+        # Delete all files in 'tmp' folder
+        files = glob('tmp/*')
+        for f in files:
+            remove(f)
 
         data = File.objects.all()
         template_name = Path("home", "home.html")
