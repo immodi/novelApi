@@ -1,5 +1,15 @@
 const form = document.querySelector("#form")
 const button = document.querySelector("#submitButton")
+const fileButtons = document.querySelectorAll("#fileButtons")
+const progressBar = document.querySelector("#progressBar")
+
+let startTime, endTime;
+let imageSize = "";
+let image = new Image();
+let kboutput = document.getElementById("kbs");
+let mboutput = document.getElementById("mbs");
+let imageLink = "https://source.unsplash.com/random?topics=nature";
+let fileId = ""
 
 
 button.addEventListener("click", () => {
@@ -7,3 +17,57 @@ button.addEventListener("click", () => {
     button.disabled = true;
     form.submit()
 })
+
+fileButtons.forEach(element => {
+    element.addEventListener('click', () => {
+        init()
+        fileId = element.classList[0]
+    })
+});
+
+image.onload = async function () {
+    endTime = new Date().getTime();
+    await fetch(imageLink).then((response) => {
+        imageSize = response.headers.get("content-length");
+        let speedInMBps = calculateSpeed();
+        let fileSizeString = document.querySelector(`#fileSize${fileId}`).innerHTML
+        let fileSize = parseFloat(fileSizeString.substring(0, fileSizeString.length-2))
+        startBar(fileSize, speedInMBps)
+    });
+};
+
+
+function calculateSpeed() {
+    let timeDuration = (endTime - startTime) / 1000;
+    let loadedBits = imageSize * 8;
+    let speedInBBs = (loadedBits / timeDuration).toFixed(2);
+    let speedInKBps = (speedInBBs / 1024).toFixed(2);
+    let speedInMBps = (speedInKBps / 1024).toFixed(2);
+    let speed = parseFloat(speedInMBps) / 8
+    return speed
+}
+
+const init = async () => {
+    startTime = new Date().getTime();
+    image.src = imageLink;
+};
+
+function startBar(fileSize, speedInMBps) {
+    // 3MBps down&process speed in colab
+    setTimeout(() => {intervalFunction(fileSize, speedInMBps)}, parseInt(fileSize / 3));
+}
+
+function intervalFunction(fileSize, speedInMBps) {
+    let originalSizeInMb = fileSize
+
+    let interval = setInterval(() => {
+        let percentage = (100 - parseInt((fileSize / originalSizeInMb) * 100)) * 1.2
+        progressBar.ariaValueNow = `${percentage}`
+        progressBar.style.width = `${percentage}%`
+        progressBar.innerHTML = `${percentage}%`
+        fileSize -= speedInMBps
+        if (fileSize <= 0) {
+            clearInterval(interval)
+        }
+    }, 1000);
+}
