@@ -57,7 +57,7 @@ function startBar(fileSize, speedInMBps) {
     let originalSizeInMb = fileSize
 
     let interval = setInterval(() => {
-        let percentage = (100 - parseFloat((fileSize / originalSizeInMb) * 100)) * 14
+        let percentage = (100 - parseFloat((fileSize / originalSizeInMb) * 100)) * 12
         progressBar.ariaValueNow = `${percentage}`
         progressBar.style.width = `${percentage}%`
         progressBar.innerHTML = `${percentage.toFixed(1)}%`
