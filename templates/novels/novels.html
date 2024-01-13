@@ -23,9 +23,9 @@
     <div class="mb-5">
         <label class="form-label">Source</label>
         <select name="novel_source" class="form-select">
-            <option>Bednovel</option>
-            <option>All Novel Updates</option>
-            <option>Bakapervert</option>
+            {% for source in sources %}
+                <option>{{source}}</option>
+            {% endfor %}
         </select>
     </div>
    

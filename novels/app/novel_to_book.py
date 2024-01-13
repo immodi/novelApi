@@ -28,8 +28,7 @@ class NovelChaptersLoader():
     def execute(self):
         selectors = (
             # novel_source: (chapter_name, chapters_container, next_chapter)
-            ('//*[@id="main1"]/div/div/div[1]/span', '//*[@id="article"]', '//*[@id="main1"]/div/div/div[3]/ul/li[4]/a'), # bednovel
-            ('//*[@id="main1"]/div/div/div[1]/span', '//*[@id="main1"]/div/div/div[2]', '//*[@id="next"]'), # allnovelupdates
+            ('//*[@id="chapter"]/div/div/h2/a/span', '//*[@id="chr-content"]', '//*[@id="next_chap"]'), # novelhulk
         )     
 
         while True:
