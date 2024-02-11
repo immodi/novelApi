@@ -1,69 +1,94 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from pathlib import Path
 from home.models import File
-from django.http import FileResponse, JsonResponse
-from .helpers import *
-from .forms import UploadFileForm, DownloadFileForm
 import telebot
+from django.http import FileResponse
+from .helpers import *
 import requests
-from os import remove, environ, path, getcwd
-from glob import glob
+from os import environ, getcwd
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-BOT_TOKEN = environ.get("BOT_TOKEN")
-bot = telebot.TeleBot(BOT_TOKEN)
+token = environ.get("BOT_TOKEN")
+bot = telebot.TeleBot(token=token)
 
 @method_decorator(csrf_exempt, name='dispatch')
-class HomeView(TemplateView):
+class HomeView(APIView):
     def get(self, request):
-        # Delete all files in 'tmp' folder
-        files = glob('tmp/*')
-        for f in files:
-            remove(f)
-
         data = File.objects.all()
-        template_name = Path("home", "home.html")
-        
-        context = {
-            "files": data
-        } 
+                
+        context = [{
+            "fileId": file.id,
+            "fileName" : file.name
+        } for file in data]
 
-        return render(request, template_name, context=context)
+        return Response(context)
 
     def post(self, request):
-        template_name = Path("home", "home.html")
-        data = File.objects.all()
-        context = {
-            "files": data,
-        }
+        try:
+            file_data = request.data
+            chunk = request.FILES.get("file")
+            parent_name = file_data.get("parentName", None)
+            
+            if parent_name is None:
+                file_name = file_data.get("fileName")
+                mime_type = file_data.get("mimeType")
+                size = int(file_data.get("size"))
+                
+                parent_file = File(mime_type=mime_type, name=file_name, size="{:,.2f}mb".format(size/1024/1024))
+                parent_file.save()
+            else: parent_file = File.objects.get(name=parent_name)
 
-        form = UploadFileForm(request.POST, request.FILES)
+            handle_uploaded_file(chunk, parent_file, bot, "drive")
+            response = dict(list(file_data.items())[:-1])
 
-        if form.is_valid():
-            handle_uploaded_file(request.FILES["file"], bot, "drive")
-        else:
-            form = UploadFileForm()
-
-        
-        return render(request, template_name, context=context)
+        except Exception as e:
+            response = {"error": str(e)}   
+    
+        return Response(response)
 
 @method_decorator(csrf_exempt, name='dispatch')
-class DownloadView(TemplateView):
+class DownloadView(APIView):
     def get(self, request):
-        file_id = request.GET.get("file_id")
-        file = File.objects.get(pk=int(file_id))
-        all_chunks = file.chunk_set.all()
+        try:
+            chunk_id = request.GET.get("file_id")
+            chunk = Chunk.objects.get(pk=int(chunk_id))
+            file_path = Path(getcwd(), "tmp", chunk.name)
 
-        for chunk in all_chunks:
-            file_location = Path("tmp", chunk.name)
             r = requests.get(bot.get_file_url(chunk.file_id), allow_redirects=True)
 
-            with open(file_location, 'wb+') as new_file:
+            with open(file_path, 'wb+') as new_file:
                 new_file.write(r.content)
-            
-        merge_file(file.name)
-        file_path = Path(getcwd(), "tmp", file.name)
-        response = FileResponse(open(file_path, 'rb'), as_attachment=True)
-        return response
+                
+            return FileResponse(open(file_path, 'rb'), as_attachment=True)
+        except Exception as e:
+            return Response({"error": str(e)})
+
+@method_decorator(csrf_exempt, name='dispatch')
+class FileDataView(APIView):
+    def get(self, request):
+        try:
+            parent_file_name = request.GET.get("parentName", None)
+
+            if parent_file_name is None:
+                all_files = File.objects.all()
+                return Response([{
+                    "fileId": file.id,
+                    "fileName": file.name,
+                    "chunksIds": [chunk.file_id for chunk in file.chunk_set.all()]
+                } for file in all_files])
+            else: 
+                parent_file = File.objects.filter(name=parent_file_name)                
+                if parent_file.exists():
+                    parent_file = parent_file.first()
+                    return Response({
+                        "fileId": parent_file.id,
+                        "fileName": parent_file.name,
+                        "chunksIds": [chunk.file_id for chunk in parent_file.chunk_set.all()]
+                    })
+                else:
+                    raise Exception("File not found")
+        except Exception as e:
+            return Response({"error": str(e)})
+

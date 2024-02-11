@@ -34,10 +34,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'novels',
     'home',
-    'webtoon',
-    'bootstrap5'
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

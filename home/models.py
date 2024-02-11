@@ -13,9 +13,8 @@ class File(models.Model):
 
 class Chunk(models.Model):
     id = models.BigAutoField(primary_key=True)
+    name = models.CharField(max_length=99999)
     file_id = models.CharField(max_length=99999)
-    name = models.CharField(max_length=999)
-    mime_type = models.CharField(max_length=500, blank=True, default="")
     main_file = models.ForeignKey(File, on_delete=models.CASCADE)
 
     def __str__(self):
