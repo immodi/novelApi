@@ -7,6 +7,7 @@ from django.http import FileResponse
 from .helpers import *
 import requests
 from os import environ, getcwd
+from glob import glob
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
@@ -52,9 +53,14 @@ class HomeView(APIView):
 class DownloadView(APIView):
     def get(self, request):
         try:
+            tmp_dir = Path(getcwd(), "tmp")
+            
+            files = glob(str(tmp_dir) + "/*")
+            for f in files: remove(f)
+
             chunk_id = request.GET.get("file_id")
             chunk = Chunk.objects.get(pk=int(chunk_id))
-            file_path = Path(getcwd(), "tmp", chunk.name)
+            file_path = Path(tmp_dir, chunk.name)
 
             r = requests.get(bot.get_file_url(chunk.file_id), allow_redirects=True)
 
