@@ -4,7 +4,7 @@ from pathlib import Path
 from home.models import File
 import telebot
 from django.http import FileResponse
-from .helpers import *
+from home.helpers import handle_uploaded_file
 import requests
 from os import environ, getcwd
 from glob import glob
