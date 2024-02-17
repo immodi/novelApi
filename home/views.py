@@ -1,12 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from pathlib import Path
-from home.models import File
+from home.models import File, Chunk
 import telebot
 from django.http import FileResponse
 from home.helpers import handle_uploaded_file
 import requests
-from os import environ, getcwd
+from os import environ, getcwd, remove
 from glob import glob
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
