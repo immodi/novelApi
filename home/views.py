@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import FileResponse
 from pathlib import Path
 from home.models import File, Chunk
 import telebot
-from django.http import FileResponse
 from home.helpers import handle_uploaded_file
 import requests
 from os import environ, getcwd, remove
@@ -18,7 +18,7 @@ bot = telebot.TeleBot(token=token)
 class HomeView(APIView):
     def get(self, request):
         data = File.objects.all()
-                
+
         context = [{
             "fileId": file.id,
             "fileName" : file.name
@@ -31,22 +31,21 @@ class HomeView(APIView):
             file_data = request.data
             chunk = request.FILES.get("file")
             parent_name = file_data.get("parentName", None)
-            
+
             if parent_name is None:
                 file_name = file_data.get("fileName")
                 mime_type = file_data.get("mimeType")
                 size = int(file_data.get("size"))
-                
+
                 parent_file = File(mime_type=mime_type, name=file_name, size="{:,.2f}mb".format(size/1024/1024))
                 parent_file.save()
             else: parent_file = File.objects.get(name=parent_name)
 
             handle_uploaded_file(chunk, parent_file, bot, "drive")
             response = dict(list(file_data.items())[:-1])
-
         except Exception as e:
-            response = {"error": str(e)}   
-    
+            response = {"error": str(e)}
+
         return Response(response)
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -54,7 +53,7 @@ class DownloadView(APIView):
     def get(self, request):
         try:
             tmp_dir = Path(getcwd(), "tmp")
-            
+
             files = glob(str(tmp_dir) + "/*")
             for f in files: remove(f)
 
@@ -66,7 +65,7 @@ class DownloadView(APIView):
 
             with open(file_path, 'wb+') as new_file:
                 new_file.write(r.content)
-                
+
             return FileResponse(open(file_path, 'rb'), as_attachment=True)
         except Exception as e:
             return Response({"error": str(e)})
@@ -84,8 +83,8 @@ class FileDataView(APIView):
                     "fileName": file.name,
                     "chunksIds": [chunk.file_id for chunk in file.chunk_set.all()]
                 } for file in all_files])
-            else: 
-                parent_file = File.objects.filter(name=parent_file_name)                
+            else:
+                parent_file = File.objects.filter(name=parent_file_name)
                 if parent_file.exists():
                     parent_file = parent_file.first()
                     return Response({
