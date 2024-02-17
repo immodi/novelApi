@@ -1,9 +1,5 @@
 Django==4.2.7
 django-cors-headers==4.3.1
 djangorestframework==3.14.0
-fpdf2==2.7.6
 requests==2.31.0
-Scrapy==2.11.0
 pyTelegramBotAPI==4.14.0
-# django-bootstrap-v5==1.0.11
-filesplit==4.0.1
