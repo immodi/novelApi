@@ -6,9 +6,11 @@ from telebot import TeleBot
 
 def handle_uploaded_file(chunk, parent_file, bot, chat_name):
     file_name = chunk.name
-    file_storage = FileSystemStorage(location=Path(getcwd(), "novelApi", "media"))
+    media_dir_path = Path(getcwd(), "novelApi", "media")
+    # media_dir_path = Path(getcwd(), "media")
+    file_storage = FileSystemStorage(location=media_dir_path)
     file_path = file_storage.save(file_name, chunk)
-    full_path = str(Path(getcwd(), "novelApi", "media", file_path))
+    full_path = str(Path(media_dir_path, file_path))
     handle_sending_chunk(full_path, chat_name, bot, parent_file)
     remove(full_path)
 
