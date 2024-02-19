@@ -44,14 +44,17 @@ class FileView(APIView):
                 name = form.cleaned_data.get("name")
                 size = form.cleaned_data.get("size")
                 mime_type = form.cleaned_data.get("mimeType")
-                file = File.objects.create(name=name, size=size, mime_type=mime_type)
-                file.save()
+                if File.objects.filter(name=name).exists():
+                    raise Exception(f"File with name '{name}' already exists")
+                else:
+                    file = File.objects.create(name=name, size=size, mime_type=mime_type)
+                    file.save()
 
-                response = {
-                    "fileId": file.id,
-                    "fileName": file.name,
-                    "mimeType": file.mime_type
-                }
+                    response = {
+                        "fileId": file.id,
+                        "fileName": file.name,
+                        "mimeType": file.mime_type
+                    }
             else:
                 errors = ""
                 for error in form.errors:
