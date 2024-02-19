@@ -15,7 +15,8 @@ from django.views.decorators.csrf import csrf_exempt
 class DownloadView(APIView):
     def get(self, request):
         try:
-            tmp_dir = Path(getcwd(), "tmp")
+            # tmp_dir = Path(getcwd(), "tmp")
+            tmp_dir = Path(getcwd(), "novelApi", "tmp")
 
             # remove all files in 'tmp' directory
             files = glob(str(tmp_dir) + "/*")
