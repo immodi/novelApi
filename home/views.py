@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from home.models import File
+from home.models import File, Directory
 import telebot
 from home.helpers import handle_uploaded_file
 from os import environ
@@ -13,14 +13,22 @@ bot = telebot.TeleBot(token=token)
 @method_decorator(csrf_exempt, name='dispatch')
 class HomeView(APIView):
     def get(self, request):
-        data = File.objects.all()
-
-        context = [{
+        # data = File.objects.all()
+        root = Directory.objects.filter(pk=1).first() 
+        all_dirs = root.directory_set.all()
+        response = [{
+            "dirId": dir.id,
+            "dirPath": dir.path,
+            "files" : [{
+                "fileId": file.id,
+                "fileName": file.name
+            } for file in dir.file_set.all()]
+        } for dir in all_dirs]
+        response.append([{
             "fileId": file.id,
-            "fileName" : file.name
-        } for file in data]
-
-        return Response(context)
+            "fileName": file.name
+        } for file in root.file_set.all()])
+        return Response(response)
 
     def post(self, request):
         try:
