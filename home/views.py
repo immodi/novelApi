@@ -13,9 +13,10 @@ bot = telebot.TeleBot(token=token)
 @method_decorator(csrf_exempt, name='dispatch')
 class HomeView(APIView):
     def get(self, request):
-        # data = File.objects.all()
-        root = Directory.objects.filter(pk=1).first() 
-        all_dirs = root.directory_set.all()
+        dir_id = request.GET.get("dirId", 1)
+        current_directory = Directory.objects.filter(pk=dir_id).first() 
+        all_dirs = current_directory.directory_set.all()
+       
         response = [{
             "dirId": dir.id,
             "dirPath": dir.path,
@@ -24,10 +25,12 @@ class HomeView(APIView):
                 "fileName": file.name
             } for file in dir.file_set.all()]
         } for dir in all_dirs]
+        
         response.append([{
             "fileId": file.id,
             "fileName": file.name
-        } for file in root.file_set.all()])
+        } for file in current_directory.file_set.all()])
+        
         return Response(response)
 
     def post(self, request):

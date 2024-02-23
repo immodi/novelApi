@@ -75,13 +75,21 @@ class FileView(APIView):
 @method_decorator(csrf_exempt, name='dispatch')
 class DirectoryView(APIView):
     def get(self, request):
-        response = [{
+        dir_path = request.GET.get("dirPath", None)
+        if dir_path is not None: 
+            dir = Directory.objects.filter(path=dir_path).first()
+            if dir is None: return Response({"error": "Directory not found"})
+            else:
+                return Response({
+                    "dirId": dir.id,
+                    "dirPath": dir.path
+                })
+            
+        return Response([{
             "dirId": dir.id,
             "dirPath": dir.path
-        } for dir in Directory.objects.all()]
+        } for dir in Directory.objects.all()])
         
-        return Response(response)
-
     def post(self, request):
         dir_path: str = request.GET.get("dirPath", None)
         if dir_path is None: return Response({"error": "Invalid Directory Path 'dirPath'"})
