@@ -17,11 +17,11 @@ class FileView(APIView):
                 file_name = file_path.split("/")[-1]
                 parent_directory_path = "/".join(file_path.split("/")[:-1])
 
-                parent_directory = Directory.objects.filter(path=parent_directory_path)
-                parent_file = File.objects.filter(name=file_name)
-                if parent_file.exists() and parent_directory.exists():
-                    parent_directory = parent_directory.first()
-                    parent_file = parent_file.filter(parent_dir=parent_directory)
+                parent_directory_filter = Directory.objects.filter(path=parent_directory_path)
+                parent_files = File.objects.filter(name=file_name)
+                if parent_files.exists() and parent_directory_filter.exists():
+                    parent_directory = parent_directory_filter.first()
+                    parent_file = parent_files.filter(parent_dir=parent_directory).first()
                     return Response({
                         "fileId": parent_file.id,
                         "fileName": parent_file.name,
@@ -32,7 +32,7 @@ class FileView(APIView):
                         } for chunk in parent_file.chunk_set.all()]
                     })
                 else:
-                    raise Exception("File not found")
+                    raise Exception(f"File with path {file_path} not found")
         except Exception as e:
             return Response({"error": str(e)})
     
