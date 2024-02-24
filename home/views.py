@@ -1,13 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from home.models import File, Directory
-import telebot
 from home.helpers import handle_uploaded_file
-from os import environ
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+import telebot
+import environ
 
-token = environ.get("BOT_TOKEN")
+env = environ.Env()
+environ.Env.read_env()
+
+token = env("BOT_TOKEN")
 bot = telebot.TeleBot(token=token)
 
 @method_decorator(csrf_exempt, name='dispatch')
