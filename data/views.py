@@ -48,7 +48,7 @@ class FileView(APIView):
                 dir = Directory.objects.filter(path=path).first()
                 if dir is None: raise Exception(f"Directory with name '{name}' does not exist")
                 
-                if File.objects.filter(parent_dir=dir).exists() and File.objects.filter(name=name).exists():
+                if File.objects.filter(name=name, parent_dir=dir).exists():
                     raise Exception(f"File with path '{path}/{name}' already exists")
                 else:
                     file = File.objects.create(name=name, size=size, mime_type=mime_type, parent_dir=dir)
