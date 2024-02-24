@@ -10,17 +10,22 @@ from django.views.decorators.csrf import csrf_exempt
 class FileView(APIView):
     def get(self, request):
         try:
-            parent_file_name = request.GET.get("fileName", None)
-
-            if parent_file_name is None:
-                raise Exception("Please provide 'fileName'")
+            file_path = request.GET.get("filePath", None)
+            if file_path is None:
+                raise Exception("Please provide 'filePath'")
             else:
-                parent_file = File.objects.filter(name=parent_file_name)
-                if parent_file.exists():
-                    parent_file = parent_file.first()
+                file_name = file_path.split("/")[-1]
+                parent_directory_path = "/".join(file_path.split("/")[:-1])
+
+                parent_directory = Directory.objects.filter(path=parent_directory_path)
+                parent_file = File.objects.filter(name=file_name)
+                if parent_file.exists() and parent_directory.exists():
+                    parent_directory = parent_directory.first()
+                    parent_file = parent_file.filter(parent_dir=parent_directory)
                     return Response({
                         "fileId": parent_file.id,
                         "fileName": parent_file.name,
+                        "fileFullPath": file_path,
                         "chunksIds": [{
                             "chunkId": chunk.id,
                             "chunkName": chunk.name
@@ -43,13 +48,8 @@ class FileView(APIView):
                 dir = Directory.objects.filter(path=path).first()
                 if dir is None: raise Exception(f"Directory with name '{name}' does not exist")
                 
-                # TODO: implement a system for importing and exporting files, 
-                # so that we can have multiple files with same name and 
-                # different paths
-                
-                # if File.objects.filter(parent_dir=dir).exists() and File.objects.filter(name=name).exists():
-                if File.objects.filter(name=name).exists():
-                    raise Exception(f"File with name '{name}' already exists")
+                if File.objects.filter(parent_dir=dir).exists() and File.objects.filter(name=name).exists():
+                    raise Exception(f"File with path '{path}/{name}' already exists")
                 else:
                     file = File.objects.create(name=name, size=size, mime_type=mime_type, parent_dir=dir)
                     file.save()
