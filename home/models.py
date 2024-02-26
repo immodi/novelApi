@@ -13,7 +13,7 @@ class File(models.Model):
     date = models.DateField(auto_now=True)
     mime_type = models.CharField(max_length=500)
     name = models.CharField(max_length=999)
-    size = models.CharField(max_length=500)
+    size = models.IntegerField()
     parent_dir = models.ForeignKey(Directory, on_delete=models.CASCADE, null=False, blank=False)
     
     def __str__(self):
