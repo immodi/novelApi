@@ -11,8 +11,25 @@ class FileView(APIView):
     def get(self, request):
         try:
             file_path = request.GET.get("filePath", None)
-            if file_path is None:
-                raise Exception("Please provide 'filePath'")
+            file_id = request.GET.get("fileId", None)
+            if file_path is None and file_id is None:
+                raise Exception("Please provide 'filePath' or a 'fileId'")
+            elif file_id and not file_path:
+                parent_file = File.objects.filter(pk=file_id)
+                if parent_file.exists():
+                    parent_file = parent_file.first()
+                    parent_file_dir = parent_file.parent_dir.path
+                    return Response({
+                        "fileId": parent_file.id,
+                        "fileName": parent_file.name,
+                        "fileFullPath": parent_file_dir + "/" + parent_file.name,
+                        "chunksIds": [{
+                            "chunkId": chunk.id,
+                            "chunkName": chunk.name
+                        } for chunk in parent_file.chunk_set.all()]
+                    })
+                else:
+                    raise Exception(f"File with id {file_id} not found")
             else:
                 file_name = file_path.split("/")[-1]
                 parent_directory_path = "/".join(file_path.split("/")[:-1])
@@ -46,7 +63,7 @@ class FileView(APIView):
                 path = form.cleaned_data.get("path")
                 
                 dir = Directory.objects.filter(path=path).first()
-                if dir is None: raise Exception(f"Directory with name '{name}' does not exist")
+                if dir is None: raise Exception(f"Directory with name '{path}' does not exist")
                 
                 if File.objects.filter(name=name, parent_dir=dir).exists():
                     raise Exception(f"File with path '{path}/{name}' already exists")
