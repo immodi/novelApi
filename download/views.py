@@ -23,14 +23,19 @@ class DownloadView(APIView):
             for f in files: remove(f)
 
             chunk_id = request.GET.get("chunkId", None)
+            is_link = request.GET.get("isLink", False)
+
             chunk = Chunk.objects.get(pk=int(chunk_id))
             file_path = Path(tmp_dir, chunk.name)
 
-            r = requests.get(bot.get_file_url(chunk.file_id), allow_redirects=True)
+            if is_link:
+                return Response({"url": bot.get_file_url(chunk.file_id)})
+            else:
+                r = requests.get(bot.get_file_url(chunk.file_id), allow_redirects=True)
 
-            with open(file_path, 'wb+') as new_file:
-                new_file.write(r.content)
+                with open(file_path, 'wb+') as new_file:
+                    new_file.write(r.content)
 
-            return FileResponse(open(file_path, 'rb'), as_attachment=True)
+                return FileResponse(open(file_path, 'rb'), as_attachment=True)
         except Exception as e:
             return Response({"error": str(e)})
