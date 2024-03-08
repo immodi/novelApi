@@ -23,10 +23,6 @@ class HomeView(APIView):
         response = [{
             "dirId": dir.id,
             "dirPath": dir.path,
-            # "files" : [{
-            #     "fileId": file.id,
-            #     "fileName": file.name
-            # } for file in dir.file_set.all()]
         } for dir in all_dirs]
         
         response.append([{

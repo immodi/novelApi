@@ -5,7 +5,6 @@ from data.forms import FileForm
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-
 @method_decorator(csrf_exempt, name='dispatch')
 class FileView(APIView):
     def get(self, request):
