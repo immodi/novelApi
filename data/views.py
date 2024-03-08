@@ -23,6 +23,7 @@ class FileView(APIView):
                         "fileId": parent_file.id,
                         "fileName": parent_file.name,
                         "fileFullPath": parent_file_dir + "/" + parent_file.name,
+                        "fileMimeType": parent_file.mime_type,
                         "chunksIds": [{
                             "chunkId": chunk.id,
                             "chunkName": chunk.name
@@ -43,6 +44,7 @@ class FileView(APIView):
                         "fileId": parent_file.id,
                         "fileName": parent_file.name,
                         "fileFullPath": file_path,
+                        "fileMimeType": parent_file.mime_type,
                         "chunksIds": [{
                             "chunkId": chunk.id,
                             "chunkName": chunk.name
