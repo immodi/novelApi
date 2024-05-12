@@ -20,17 +20,18 @@ class HomeView(APIView):
         current_directory = Directory.objects.filter(pk=dir_id).first() 
         all_dirs = current_directory.directory_set.all()
        
-        response = [{
-            "dirId": dir.id,
-            "dirPath": dir.path,
-        } for dir in all_dirs]
-        
-        response.append([{
-            "fileId": file.id,
-            "fileName": file.name,
-            "fileSize": file.size,
-        } for file in current_directory.file_set.all()])
-        
+        response = {
+            "dirsArray": [{
+                "dirId": dir.id,
+                "dirPath": dir.path,
+            } for dir in all_dirs],
+
+            "filesArray": [{
+                "fileId": file.id,
+                "fileName": file.name,
+                "fileSize": file.size,
+            } for file in current_directory.file_set.all()]
+        }
         return Response(response)
 
     def post(self, request):
